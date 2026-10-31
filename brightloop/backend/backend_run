@@ -1,0 +1,24 @@
+Backend Execution Commands
+Run these commands from the brightloop/backend directory to initialize the migration environment, generate the unified database schema, and boot the API alongside the billing worker:   DOS:: 1. Initialize Alembic (if not already done)
+alembic init alembic
+
+:: 2. Generate the initial migration containing all tables
+alembic revision --autogenerate -m "Initial schema: Identity, Catalog, Subscriptions, Billing, Peers"
+
+:: 3. Apply the migration to the PostgreSQL database
+alembic upgrade head
+
+:: 4. Start the FastAPI API server
+uvicorn app.main:app --reload --port 8000
+
+
+:: 1. Run the seed script to populate the database and enqueue the job
+python scripts/seed_database.py
+
+:: 2. Test the API (In a new terminal, using curl or your browser)
+curl http://localhost:8000/api/v1/catalog/plans
+curl http://localhost:8000/api/v1/analytics/revenue
+
+:: 3. Run the billing worker manually to observe the FOR UPDATE SKIP LOCKED transaction
+cd backend
+python -m app.workers.billing_worker
