@@ -1,0 +1,4 @@
+{
+  // Tailwind v4 directives (@theme, @utility, ...) aren't known to the built-in CSS linter
+  "css.lint.unknownAtRules": "ignore"
+}
